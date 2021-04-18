@@ -57,12 +57,11 @@ def main():
         for entry in xml.findAll("entry"):
             json_entry = map_to_scheme(entry, MAP_SCHEME)
             packages.append(json_entry)
-
             if not os.environ.get("DONT_WRITE_PACKAGE_DATA", '0') == '1':
-                print("Writing package data for", entry['packageName'])
+                print("Writing package data for", json_entry['packageName'])
                 with open(f"public/package_info/{json_entry['packageName']}.json", 'w') as f: json.dump(
                     map_to_scheme(entry, PACKAGEINFO_SCHEME), f)
-        # time.sleep(0.5)  # We are the good guys, I think? And there is probably ratelimiting too
+        time.sleep(0.5)  # We are the good guys, I think? And there is probably ratelimiting too
     with open("public/package_data.json", 'w') as f:
         json.dump({"timestamp": time.time(), "software": packages}, f)
 
