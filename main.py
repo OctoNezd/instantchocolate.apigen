@@ -13,7 +13,8 @@ MAP_SCHEME = {
     "version": "d:Version",
     "icon": "d:IconUrl",
     "author": "author name",
-    "downloadCount": "d:DownloadCount"
+    "downloadCount": "d:DownloadCount",
+    "tags": ("d:Tags", " ")
 }
 PACKAGEINFO_SCHEME = {
     "description": "d:Description",
@@ -29,21 +30,29 @@ def map_to_scheme(entry, scheme):
     json_entry = {}
     for item, selector in scheme.items():
         # yeah it fucking sucks
+        separator = None
+        if isinstance(selector, tuple):
+            selector, separator = selector
         if ":" not in selector:
             item_xml = entry.select(selector)[0]
         else:
             item_xml = entry.find(selector)
         value = item_xml.text
-        if value.isdigit():
+        if separator is not None:
+            value = value.strip().split(separator)
+        elif value.isdigit():
             value = int(value)
         json_entry[item] = value
     return json_entry
 
 
 def main():
-    packages_total = int(requests.get("https://community.chocolatey.org/api/v2/Packages/$count",
-                                      params={"$filter": "IsLatestVersion",
-                                              }).text)
+    if os.environ.get("SMALL_DATASET", 0) == 0:
+        packages_total = int(requests.get("https://community.chocolatey.org/api/v2/Packages/$count",
+                                          params={"$filter": "IsLatestVersion",
+                                                  }).text)
+    else:
+        packages_total = 120
     os.makedirs("public/package_info", exist_ok=True)
     packages = []
     for skipval in tqdm(range(0, packages_total, 40)):
