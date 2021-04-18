@@ -37,5 +37,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-          cname: instantchocolate.octonezd.me
+          cname: api-instantchocolate.octonezd.me
           force_orphan: true
