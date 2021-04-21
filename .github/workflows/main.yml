@@ -32,6 +32,21 @@ jobs:
         run: python3 -m pip install -r requirements.txt
       - name: Generate data
         run: python3 main.py
+      - name: Install Node
+        run: |
+           curl -fsSL https://deb.nodesource.com/setup_15.x | sudo -E bash -
+           sudo apt-get install -y nodejs
+      - name: Checkout npm project
+        uses: actions/checkout@v2
+        with:
+          repository: octonezd/instantchocolate
+          path: instantchocolate
+      - name: Install npm project
+        run: npm ci --prefix instantchocolate
+      - name: Generate Fuse.js index
+        run: |
+          npm run --prefix instantchocolate createFuseIndex ../public/package_data.json
+          mv instantchocolate/fuse-index public
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
