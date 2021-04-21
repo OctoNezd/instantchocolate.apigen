@@ -46,7 +46,7 @@ jobs:
       - name: Generate Fuse.js index
         run: |
           npm run --prefix instantchocolate createFuseIndex ../public/package_data.json
-          mv instantchocolate/fuse-index public
+          mv instantchocolate/fuse-index.json public
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
