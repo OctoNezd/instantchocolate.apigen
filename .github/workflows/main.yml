@@ -1,56 +1,56 @@
 name: Create API Data
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ main ]
-  # Every sunday
-  schedule:
-    - cron: '0 0 * * SUN'
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    # Triggers the workflow on push or pull request events but only for the main branch
+    push:
+        branches: [main]
+    # Every sunday
+    schedule:
+        - cron: "0 0 * * SUN"
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    # This workflow contains a single job called "build"
+    build:
+        # The type of runner that the job will run on
+        runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+        # Steps represent a sequence of tasks that will be executed as part of the job
+        steps:
+            # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+            - uses: actions/checkout@v2
 
-      - name: Setup Python
-        uses: actions/setup-python@v2.2.2
-        with:
-          # Version range or exact version of a Python version to use, using SemVer's version range syntax.
-          python-version: 3.8
-      - name: Install dependencies
-        run: python3 -m pip install -r requirements.txt
-      - name: Generate data
-        run: python3 main.py
-      - name: Install Node
-        run: |
-           curl -fsSL https://deb.nodesource.com/setup_15.x | sudo -E bash -
-           sudo apt-get install -y nodejs
-      - name: Checkout npm project
-        uses: actions/checkout@v2
-        with:
-          repository: octonezd/instantchocolate
-          path: instantchocolate
-      - name: Install npm project
-        run: npm ci --prefix instantchocolate
-      - name: Generate Fuse.js index
-        run: |
-          npm run --prefix instantchocolate createFuseIndex ../public/package_data.json
-          mv instantchocolate/fuse-index.json public
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          cname: api-instantchocolate.octonezd.me
-          force_orphan: true
+            - name: Setup Python
+              uses: actions/setup-python@v2.2.2
+              with:
+                  # Version range or exact version of a Python version to use, using SemVer's version range syntax.
+                  python-version: 3.8
+            - name: Install dependencies
+              run: python3 -m pip install -r requirements.txt
+            - name: Generate data
+              run: python3 main.py
+            - name: Install Node
+              run: |
+                  curl -fsSL https://deb.nodesource.com/setup_15.x | sudo -E bash -
+                  sudo apt-get install -y nodejs
+            - name: Checkout npm project
+              uses: actions/checkout@v2
+              with:
+                  repository: octonezd/instantchocolate
+                  path: instantchocolate
+            - name: Install npm project
+              run: npm ci --prefix instantchocolate
+            - name: Generate Fuse.js index
+              run: |
+                  npm run --prefix instantchocolate createFuseIndex ../public/package_data.json
+                  mv instantchocolate/fuse-index.json public
+            - name: Deploy
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./public
+                  cname: api-instantchocolate.octonezd.me
+                  force_orphan: true
