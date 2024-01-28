@@ -32,17 +32,16 @@ jobs:
               run: python3 -m pip install -r requirements.txt
             - name: Generate data
               run: python3 main.py
-            - name: Install Node
-              run: |
-                  curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-                  sudo apt-get install -y nodejs
+            - uses: actions/setup-node@v4
+              with:
+                node-version: 18
             - name: Checkout npm project
               uses: actions/checkout@v2
               with:
                   repository: octonezd/instantchocolate
                   path: instantchocolate
             - name: Install npm project
-              run: npm ci --prefix instantchocolate
+              run: npm install --prefix instantchocolate
             - name: Generate Fuse.js index
               run: |
                   npm run --prefix instantchocolate createFuseIndex ../public/package_data.json
