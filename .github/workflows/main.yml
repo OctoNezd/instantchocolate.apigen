@@ -30,11 +30,6 @@ jobs:
                   python-version: 3.8
             - name: Install dependencies
               run: python3 -m pip install -r requirements.txt
-            - name: Generate data
-              run: python3 main.py
-            - uses: actions/setup-node@v4
-              with:
-                node-version: 18
             - name: Checkout npm project
               uses: actions/checkout@v2
               with:
@@ -42,6 +37,11 @@ jobs:
                   path: instantchocolate
             - name: Install npm project
               run: npm install --prefix instantchocolate
+            - name: Generate data
+              run: python3 main.py
+            - uses: actions/setup-node@v4
+              with:
+                node-version: 18
             - name: Generate Fuse.js index
               run: |
                   npm run --prefix instantchocolate createFuseIndex ../public/package_data.json
