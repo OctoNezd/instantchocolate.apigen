@@ -35,6 +35,8 @@ jobs:
               with:
                   repository: octonezd/instantchocolate
                   path: instantchocolate
+            - name: Remove package lock
+              run: rm instantchocolate/package-lock.json
             - name: Install npm project
               run: npm install --prefix instantchocolate
             - name: Generate data
